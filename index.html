@@ -178,7 +178,7 @@
         }
 
         .previous-params-title {
-            font-size: 1.1em;
+            font-size: 0.95em;
             font-weight: 600;
             color: #555;
             margin-top: 12px;
@@ -186,7 +186,7 @@
 
         .previous-params {
             color: #666;
-            font-size: 1em;
+            font-size: 0.95em;
             margin-top: 8px;
             white-space: pre-line;
         }
@@ -223,12 +223,41 @@
         }
 
         @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
             .container {
-                padding: 20px;
+                padding: 18px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 1.3em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+
+            .input-group {
+                margin-bottom: 16px;
             }
 
             .input-row {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr auto;
+                grid-template-areas:
+                    "size remove"
+                    "ratio remove";
+                gap: 8px 10px;
+            }
+
+            .cup-size {
+                grid-area: size;
+            }
+
+            .milk-ratio {
+                grid-area: ratio;
             }
 
             .input-header {
@@ -240,7 +269,26 @@
                 display: none;
             }
 
+            .beans-row {
+                grid-template-columns: 1fr;
+                grid-template-areas: "beans";
+            }
+
+            #beans-per-100 {
+                grid-area: beans;
+            }
+
             .remove-btn {
+                width: 44px;
+                height: 44px;
+                padding: 0;
+                align-self: center;
+                justify-self: end;
+                border-radius: 10px;
+                font-size: 1.1em;
+            }
+
+            .add-btn {
                 width: 100%;
             }
         }
@@ -254,13 +302,13 @@
         <div class="input-group">
             <div class="input-row input-header" aria-hidden="true">
                 <div>Cup Size (ml)</div>
-                <div>Milk-to-Cofee ratio</div>
+                <div>Milk-to-Cup ratio</div>
                 <div></div>
             </div>
             <div id="input-rows">
                 <div class="input-row">
                     <input type="number" class="cup-size" placeholder="Cup size (ml)" min="0" step="1" value="300">
-                    <input type="number" class="milk-ratio" placeholder="Milk-to-Cofee ratio" min="0" max="1" step="0.01" value="0.25">
+                    <input type="number" class="milk-ratio" placeholder="Milk-to-Cup ratio" min="0" max="1" step="0.01" value="0.25">
                     <button class="remove-btn" onclick="removeRow(this)" style="visibility: hidden;">&ndash;</button>
                 </div>
             </div>
