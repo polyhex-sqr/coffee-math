@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Coffee Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #d5d5d5 0%, #f5f5f5 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgb(229, 224, 215);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .input-header {
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .input-header div:last-child {
+            text-align: right;
+        }
+
+        .beans-row .input-spacer,
+        .beans-row .remove-placeholder {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .remove-btn {
+            background: #f86254;
+            color: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #e75143;
+        }
+
+        .add-btn {
+            background: #7dca61;
+            color: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #6cb950;
+        }
+
+        .add-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #d5d5d5 0%, #f5f5f5 100%);
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 10px #d5d5d5;
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .previous-results {
+            margin-top: 20px;
+            display: block;
+        }
+
+        .results-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .previous-params-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #555;
+            margin-top: 12px;
+        }
+
+        .previous-params {
+            color: #666;
+            font-size: 1em;
+            margin-top: 8px;
+            white-space: pre-line;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .result-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            .input-header {
+                display: none;
+            }
+
+            .beans-row .input-spacer,
+            .beans-row .remove-placeholder {
+                display: none;
+            }
+
+            .remove-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☕ Filter Coffee Calculator</h1>
+        <p class="subtitle">Calculate water, milk, and coffee amounts for your filter coffee</p>
+
+        <div class="input-group">
+            <div class="input-row input-header" aria-hidden="true">
+                <div>Cup Size (ml)</div>
+                <div>Milk-to-Cofee ratio</div>
+                <div></div>
+            </div>
+            <div id="input-rows">
+                <div class="input-row">
+                    <input type="number" class="cup-size" placeholder="Cup size (ml)" min="0" step="1" value="300">
+                    <input type="number" class="milk-ratio" placeholder="Milk-to-Cofee ratio" min="0" max="1" step="0.01" value="0.25">
+                    <button class="remove-btn" onclick="removeRow(this)" style="visibility: hidden;">&ndash;</button>
+                </div>
+            </div>
+            <button class="add-btn" id="add-row-btn" onclick="addRow()">+</button>
+        </div>
+
+        <div class="input-group">
+            <label for="beans-per-100">Beans per 100 ml (g)</label>
+            <div class="input-row beans-row">
+                <input type="number" id="beans-per-100" min="0" step="0.1" value="6">
+                <div class="input-spacer" aria-hidden="true"></div>
+                <button class="remove-btn remove-placeholder" type="button" aria-hidden="true" tabindex="-1">&ndash;</button>
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculate()">Calculate</button>
+
+        <div class="results" id="results">
+            <div class="result-item">
+                <span class="result-label">Water (ml):</span>
+                <span class="result-value" id="water-result">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Milk (ml):</span>
+                <span class="result-value" id="milk-result">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Coffee (g):</span>
+                <span class="result-value" id="coffee-result">-</span>
+            </div>
+        </div>
+
+        <div class="results previous-results" id="previous-results">
+            <div class="results-title">Previous Result</div>
+            <div class="empty-state" id="previous-empty">No previous calculation yet.</div>
+            <div class="previous-items" id="previous-items" style="display: none;">
+                <div class="result-item">
+                    <span class="result-label">Water (ml):</span>
+                    <span class="result-value" id="prev-water-result">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Milk (ml):</span>
+                    <span class="result-value" id="prev-milk-result">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Coffee (g):</span>
+                    <span class="result-value" id="prev-coffee-result">-</span>
+                </div>
+                <div class="previous-params-title">Previous Parameters</div>
+                <div class="previous-params" id="prev-params">-</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const maxRows = 5;
+        let lastCalculation = null;
+
+        function formatNumber(value, decimals) {
+            return value.toFixed(decimals).replace(/\.00$/, '').replace(/\.0$/, '');
+        }
+
+        function formatParameters(cupSizes, milkRatios, beansPer100) {
+            const lines = cupSizes.map((size, index) => {
+                const ratioText = formatNumber(milkRatios[index], 2);
+                return `Cup ${index + 1}: ${formatNumber(size, 0)} ml, Milk ratio: ${ratioText}`;
+            });
+            lines.push(`Beans per 100 ml: ${formatNumber(beansPer100, 1)} g`);
+            return lines.join('\n');
+        }
+
+        function updatePreviousFrom(calculation) {
+            if (!calculation) {
+                return;
+            }
+
+            document.getElementById('prev-water-result').textContent = calculation.water;
+            document.getElementById('prev-milk-result').textContent = calculation.milk;
+            document.getElementById('prev-coffee-result').textContent = calculation.coffee;
+            document.getElementById('prev-params').textContent = calculation.params;
+            document.getElementById('previous-empty').style.display = 'none';
+            document.getElementById('previous-items').style.display = 'block';
+        }
+
+        function stashCurrentResults() {
+            const results = document.getElementById('results');
+            if (!lastCalculation || !results.classList.contains('show')) {
+                return;
+            }
+
+            updatePreviousFrom(lastCalculation);
+
+            results.classList.remove('show');
+        }
+
+        function addRow() {
+            const container = document.getElementById('input-rows');
+            if (container.children.length >= maxRows) {
+                return;
+            }
+            const row = document.createElement('div');
+            row.className = 'input-row';
+            row.innerHTML = `
+                <input type="number" class="cup-size" placeholder="Cup size (ml)" min="0" step="1" value="300">
+                <input type="number" class="milk-ratio" placeholder="Milk ratio (0-1)" min="0" max="1" step="0.01" value="0.25">
+                <button class="remove-btn" onclick="removeRow(this)">&ndash;</button>
+            `;
+            container.appendChild(row);
+            updateRemoveButtons();
+            stashCurrentResults();
+        }
+
+        function removeRow(button) {
+            const container = document.getElementById('input-rows');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+                updateRemoveButtons();
+                stashCurrentResults();
+            }
+        }
+
+        function updateRemoveButtons() {
+            const rows = document.getElementById('input-rows').children;
+            for (let i = 0; i < rows.length; i++) {
+                const removeBtn = rows[i].querySelector('.remove-btn');
+                if (i === 0) {
+                    removeBtn.style.visibility = 'hidden';
+                    continue;
+                }
+                removeBtn.style.visibility = rows.length > 1 ? 'visible' : 'hidden';
+            }
+            updateAddButton();
+        }
+
+        function updateAddButton() {
+            const addBtn = document.getElementById('add-row-btn');
+            const rowCount = document.getElementById('input-rows').children.length;
+            addBtn.disabled = rowCount >= maxRows;
+        }
+
+        function calculate() {
+            stashCurrentResults();
+            const cupSizeInputs = document.querySelectorAll('.cup-size');
+            const milkRatioInputs = document.querySelectorAll('.milk-ratio');
+            const beansPer100Input = document.getElementById('beans-per-100');
+
+            const cupSizes = Array.from(cupSizeInputs).map(input => parseFloat(input.value) || 0);
+            const milkRatios = Array.from(milkRatioInputs).map((input) => {
+                const rawValue = parseFloat(input.value);
+                const value = Number.isFinite(rawValue) ? rawValue : 0;
+                const clamped = Math.min(1, Math.max(0, value));
+                input.value = clamped.toFixed(2).replace(/\.00$/, '');
+                return clamped;
+            });
+            const beansPer100 = parseFloat(beansPer100Input.value) || 0;
+
+            // Validate inputs
+            if (cupSizes.some(size => size <= 0)) {
+                alert('Please enter valid cup sizes (greater than 0)');
+                return;
+            }
+
+            if (beansPer100 <= 0) {
+                alert('Please enter a valid beans per 100 ml value (greater than 0)');
+                return;
+            }
+
+            // Calculate coffee sizes: sum of (cup_size * (1 - milk_ratio))
+            const coffeeSizes = cupSizes.reduce((sum, size, i) => {
+                return sum + (size * (1 - milkRatios[i]));
+            }, 0);
+
+            // Calculate results
+            const waterMl = coffeeSizes / 0.9;
+            const milkMl = cupSizes.reduce((sum, size, i) => sum + (size * milkRatios[i]), 0);
+            const coffeeG = coffeeSizes / 100 * beansPer100;
+
+            // Display results
+            document.getElementById('water-result').textContent = waterMl.toFixed(1);
+            document.getElementById('milk-result').textContent = milkMl.toFixed(1);
+            document.getElementById('coffee-result').textContent = coffeeG.toFixed(1);
+            document.getElementById('results').classList.add('show');
+
+            lastCalculation = {
+                water: waterMl.toFixed(1),
+                milk: milkMl.toFixed(1),
+                coffee: coffeeG.toFixed(1),
+                params: formatParameters(cupSizes, milkRatios, beansPer100)
+            };
+        }
+
+        // Allow Enter key to trigger calculation
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+
+        // Initialize remove button visibility
+        updateRemoveButtons();
+    </script>
+</body>
+</html>
