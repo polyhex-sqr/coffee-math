@@ -54,10 +54,27 @@
             align-items: center;
         }
 
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field-label {
+            display: none;
+            color: #666;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
         .input-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
             color: #555;
             font-weight: 600;
             font-size: 0.9em;
+            margin-bottom: 10px;
         }
 
         .input-header div:last-child {
@@ -250,18 +267,25 @@
                     "size remove"
                     "ratio remove";
                 gap: 8px 10px;
+                background: #efe9df;
+                padding: 10px;
+                border-radius: 12px;
             }
 
-            .cup-size {
+            .cup-field {
                 grid-area: size;
             }
 
-            .milk-ratio {
+            .milk-field {
                 grid-area: ratio;
             }
 
             .input-header {
                 display: none;
+            }
+
+            .field-label {
+                display: block;
             }
 
             .beans-row .input-spacer,
@@ -272,6 +296,9 @@
             .beans-row {
                 grid-template-columns: 1fr;
                 grid-template-areas: "beans";
+                background: #efe9df;
+                padding: 10px;
+                border-radius: 12px;
             }
 
             #beans-per-100 {
@@ -280,8 +307,8 @@
 
             .remove-btn {
                 width: 44px;
-                height: 44px;
-                padding: 0;
+                height: auto;
+                padding: 0 12px;
                 align-self: center;
                 justify-self: end;
                 border-radius: 10px;
@@ -307,8 +334,14 @@
             </div>
             <div id="input-rows">
                 <div class="input-row">
-                    <input type="number" class="cup-size" placeholder="Cup size (ml)" min="0" step="1" value="300">
-                    <input type="number" class="milk-ratio" placeholder="Milk-to-Cup ratio" min="0" max="1" step="0.01" value="0.25">
+                    <div class="field cup-field">
+                        <span class="field-label">Cup Size (ml)</span>
+                        <input type="number" class="cup-size" placeholder="Cup size (ml)" min="0" step="1" value="300">
+                    </div>
+                    <div class="field milk-field">
+                        <span class="field-label">Milk-to-Cup ratio</span>
+                        <input type="number" class="milk-ratio" placeholder="Milk-to-Cup ratio" min="0" max="1" step="0.01" value="0.25">
+                    </div>
                     <button class="remove-btn" onclick="removeRow(this)" style="visibility: hidden;">&ndash;</button>
                 </div>
             </div>
@@ -412,8 +445,14 @@
             const row = document.createElement('div');
             row.className = 'input-row';
             row.innerHTML = `
-                <input type="number" class="cup-size" placeholder="Cup size (ml)" min="0" step="1" value="300">
-                <input type="number" class="milk-ratio" placeholder="Milk ratio (0-1)" min="0" max="1" step="0.01" value="0.25">
+                <div class="field cup-field">
+                    <span class="field-label">Cup Size (ml)</span>
+                    <input type="number" class="cup-size" placeholder="Cup size (ml)" min="0" step="1" value="300">
+                </div>
+                <div class="field milk-field">
+                    <span class="field-label">Milk-to-Cup ratio</span>
+                    <input type="number" class="milk-ratio" placeholder="Milk ratio (0-1)" min="0" max="1" step="0.01" value="0.25">
+                </div>
                 <button class="remove-btn" onclick="removeRow(this)">&ndash;</button>
             `;
             container.appendChild(row);
