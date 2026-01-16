@@ -11,6 +11,10 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --control-height: 48px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #d5d5d5 0%, #f5f5f5 100%);
@@ -49,9 +53,13 @@
         .input-row {
             display: grid;
             grid-template-columns: 1fr 1fr auto;
+            grid-template-areas: "size ratio remove";
             gap: 10px;
             margin-bottom: 10px;
             align-items: center;
+            background: #efe9df;
+            padding: 10px;
+            border-radius: 12px;
         }
 
         .field {
@@ -61,30 +69,26 @@
         }
 
         .field-label {
-            display: none;
+            display: block;
             color: #666;
             font-weight: 600;
             font-size: 0.85em;
         }
 
+        .cup-field {
+            grid-area: size;
+        }
+
+        .milk-field {
+            grid-area: ratio;
+        }
+
         .input-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 10px;
-            color: #555;
-            font-weight: 600;
-            font-size: 0.9em;
-            margin-bottom: 10px;
+            display: none;
         }
 
         .input-header div:last-child {
             text-align: right;
-        }
-
-        .beans-row .input-spacer,
-        .beans-row .remove-placeholder {
-            visibility: hidden;
-            pointer-events: none;
         }
 
         label {
@@ -97,6 +101,7 @@
 
         input[type="number"] {
             width: 100%;
+            height: var(--control-height);
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
@@ -114,11 +119,15 @@
             color: #f5f5f5;
             border: none;
             border-radius: 8px;
-            padding: 12px 20px;
+            width: 56px;
+            height: var(--control-height);
+            padding: 0;
             cursor: pointer;
             font-size: 1em;
             font-weight: 600;
             transition: background 0.3s;
+            grid-area: remove;
+            align-self: end;
         }
 
         .remove-btn:hover {
@@ -267,48 +276,16 @@
                     "size remove"
                     "ratio remove";
                 gap: 8px 10px;
-                background: #efe9df;
-                padding: 10px;
-                border-radius: 12px;
-            }
-
-            .cup-field {
-                grid-area: size;
-            }
-
-            .milk-field {
-                grid-area: ratio;
-            }
-
-            .input-header {
-                display: none;
             }
 
             .field-label {
                 display: block;
             }
 
-            .beans-row .input-spacer,
-            .beans-row .remove-placeholder {
-                display: none;
-            }
-
-            .beans-row {
-                grid-template-columns: 1fr;
-                grid-template-areas: "beans";
-                background: #efe9df;
-                padding: 10px;
-                border-radius: 12px;
-            }
-
-            #beans-per-100 {
-                grid-area: beans;
-            }
-
             .remove-btn {
-                width: 44px;
-                height: auto;
-                padding: 0 12px;
+                width: 48px;
+                height: var(--control-height);
+                padding: 0;
                 align-self: center;
                 justify-self: end;
                 border-radius: 10px;
@@ -327,11 +304,6 @@
         <p class="subtitle">Calculate water, milk, and coffee amounts for your filter coffee</p>
 
         <div class="input-group">
-            <div class="input-row input-header" aria-hidden="true">
-                <div>Cup Size (ml)</div>
-                <div>Milk-to-Cup ratio</div>
-                <div></div>
-            </div>
             <div id="input-rows">
                 <div class="input-row">
                     <div class="field cup-field">
@@ -350,11 +322,7 @@
 
         <div class="input-group">
             <label for="beans-per-100">Beans per 100 ml (g)</label>
-            <div class="input-row beans-row">
-                <input type="number" id="beans-per-100" min="0" step="0.1" value="6">
-                <div class="input-spacer" aria-hidden="true"></div>
-                <button class="remove-btn remove-placeholder" type="button" aria-hidden="true" tabindex="-1">&ndash;</button>
-            </div>
+            <input type="number" id="beans-per-100" min="0" step="0.1" value="6">
         </div>
 
         <button class="calculate-btn" onclick="calculate()">Calculate</button>
