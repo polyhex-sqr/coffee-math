@@ -1,5 +1,5 @@
 # coffee-math
-Good coffee starts with good ratios. A simple filter coffee calculator.
+Good coffee starts with good ratios. A simple filter coffee [calculator](https://polyhex-sqr.github.io/coffee-math/).
 
 <img src="assets/screenshot.png" alt="screenshot" width="350">
 
